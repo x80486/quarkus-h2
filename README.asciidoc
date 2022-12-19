@@ -1,0 +1,7 @@
+= quarkus-h2
+:uri-quarkus-home: https://quarkus.io/
+
+image::https://raw.githubusercontent.com/quarkusio/quarkusio.github.io/develop/assets/images/quarkiverse_icon_default.svg[Quarkus Logo,150,role="right"]
+
+{uri-quarkus-home}[Quarkus^] is a Java framework tailored for deployment on Kubernetes.
+Key technology components surrounding it are OpenJDK HotSpot and GraalVM.

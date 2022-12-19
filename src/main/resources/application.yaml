@@ -1,0 +1,49 @@
+---
+quarkus:
+  application:
+    name: quarkus-h2
+  datasource:
+    db-kind: h2
+    jdbc:
+      url: jdbc:h2:file:~/quarkus_db;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;MODE=PostgreSQL
+      # url: jdbc:h2:mem:quarkus_db;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;DEFAULT_NULL_ORDERING=HIGH;MODE=PostgreSQL
+    username: sa
+  liquibase:
+    change-log: database/changelog.xml
+    clean-at-start: false
+    migrate-at-start: true
+    validate-on-migrate: true
+  log:
+    category:
+      "io.quarkus":
+        level: info
+      "org.acme":
+        level: info
+    console:
+      async: true
+      enable: true
+    level: warn
+---
+"%dev":
+  quarkus:
+    console:
+      color: true
+    liquibase:
+      clean-at-start: true # TODO: What's going on with you, huh? :/
+    log:
+      category:
+        "org.acme":
+          level: debug
+      console:
+        darken: 1
+        format: "%d{yyyy-MM-dd HH:mm:ss,SSS} |- %-5p in %c:%L [%t] - %m%e%n"
+        json: false
+---
+"%prod":
+---
+"%test":
+  quarkus:
+    log:
+      category:
+        "org.acme":
+          level: warn

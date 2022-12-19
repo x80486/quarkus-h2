@@ -1,0 +1,64 @@
+import io.quarkus.gradle.tasks.QuarkusDev
+
+import java.nio.charset.StandardCharsets
+
+plugins {
+  id("io.quarkus")
+  id("org.gradle.eclipse")
+  id("org.gradle.idea")
+  id("org.gradle.java")
+}
+
+group = "org.acme"
+version = "0.1.0"
+
+configurations {
+  configureEach {
+    resolutionStrategy {
+      failOnNonReproducibleResolution()
+      preferProjectModules()
+    }
+  }
+  runtimeClasspath.shouldResolveConsistentlyWith(compileClasspath)
+}
+
+dependencies {
+  implementation(enforcedPlatform("io.quarkus:quarkus-universe-bom:${property("quarkus.version")}"))
+
+  implementation("io.quarkus:quarkus-arc")
+  implementation("io.quarkus:quarkus-jackson")
+
+  runtimeOnly("io.quarkus:quarkus-agroal")
+  runtimeOnly("io.quarkus:quarkus-config-yaml")
+  runtimeOnly("io.quarkus:quarkus-jdbc-h2")
+  runtimeOnly("io.quarkus:quarkus-liquibase")
+  runtimeOnly("io.quarkus:quarkus-logging-json")
+  runtimeOnly("org.jboss.slf4j:slf4j-jboss-logmanager") // ...to use SLF4J instead
+}
+
+repositories {
+  mavenCentral()
+}
+
+// ================================================================================================
+
+java {
+  consistentResolution {
+    useCompileClasspathVersions()
+  }
+  toolchain {
+    languageVersion.set(JavaLanguageVersion.of(17))
+  }
+}
+
+// ================================================================================================
+
+tasks.withType(JavaCompile).configureEach {
+  final def arguments = ["-parameters"]
+  options.compilerArgs.addAll(arguments)
+  options.encoding(StandardCharsets.UTF_8 as String)
+}
+
+tasks.withType(QuarkusDev).configureEach {
+  jvmArgs = ["-Duser.timezone=UTC"]
+}
